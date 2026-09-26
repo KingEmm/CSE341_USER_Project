@@ -69,7 +69,7 @@ const createProduct = async (req, res, next) => {
 
     try{
       let result;
-      const a = await mongodb.getDb().db('test').collection('Products').createIndex({ email: 1 }, { unique: true });
+      // const a = await mongodb.getDb().db('test').collection('Products').createIndex({ email: 1 }, { unique: true });
       // console.log('Logging')
       if(Array.isArray(data))
           result  = await mongodb.getDb().db('test').collection('Products').insertMany(data);

@@ -120,8 +120,8 @@ const editSingleUser = async (req, res, next) => {
         return res.status(400).json({ errors: errors.array() });
     }
     try{ 
-        const userExist = !await usernameExists(username);
-        console.log(userExist);
+        const userExist = await usernameExists(username);
+        console.log(!userExist);
         if(!userExist){
             res.status(404).json({ message: 'User not found' });
             return;

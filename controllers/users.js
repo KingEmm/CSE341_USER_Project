@@ -45,8 +45,11 @@ const usernameExists = async (username) => {
 const getAllUsers = async (req, res, next) => {
     try{
         const result = await mongodb.getDb().db('test').collection('Users').find();
+        // delete result._id;
+        // delete result.password;
+        const sanitizedUsers = result.map(({ _id, password, ...results }) => results);
         
-        result.toArray().then((lists) => {
+        sanitizedUsers.toArray().then((lists) => {
             res.setHeader('Content-Type', 'application/json');
             res.status(200).json(lists); // we just need the first one (the only one).
         });
@@ -60,10 +63,11 @@ const getSingleUser = async (req, res, next) => {
   // console.log(req.params.id);
   try{
       const username = req.params.username;
-      const result = await mongodb.getDb().db('test').collection('Users').findOne({ 'username': username });
-    
+      const  result = await mongodb.getDb().db('test').collection('Users').findOne({ 'username': username });
       if (result) {
         res.setHeader('Content-Type', 'application/json');
+        delete result._id;
+        delete result.password;
         res.status(200).json(result);
       } else {
         res.status(404).json({ message: 'User not found' });
@@ -118,8 +122,10 @@ const editSingleUser = async (req, res, next) => {
             res.status(404).json({ message: 'User not found' });
             return;
         }
-        await mongodb.getDb().db('test').collection('Products').createIndex({ email: 1 }, { unique: true });
-        await mongodb.getDb().db('test').collection('Products').createIndex({ username: 1 }, { unique: true });
+        if(emailExists(data.email)){
+            res.status(400).json({message: "Email Aready Exists"})
+            return;
+        }
         const result = await mongodb.getDb().db('test').collection('Users').updateOne({ 'username': username }, { $set: data });
     
         if (result) {

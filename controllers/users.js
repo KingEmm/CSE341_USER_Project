@@ -76,16 +76,21 @@ const getSingleUser = async (req, res, next) => {
 
 const createUser = async (req, res, next) => {
     const data  =  req.body;
+    console.log(1);
     const errors = validationResult(req);
+    console.log(2);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
+    console.log(3);
 
     try{
         let result;
-        await mongodb.getDb().db('test').collection('Products').createIndex({ email: 1 }, { unique: true });
-        await mongodb.getDb().db('test').collection('Products').createIndex({ username: 1 }, { unique: true });
-        // console.log('Logging')
+        if (await emailExists(data.email) || await usernameExists(data.username)) {
+            res.status(400).json({ message: 'Email or username already exist' });
+            return;
+        }
+        console.log('Logging 4');
         if(Array.isArray(data))
             result  = await mongodb.getDb().db('test').collection('Users').insertMany(data);
         else
@@ -95,7 +100,7 @@ const createUser = async (req, res, next) => {
         res.setHeader('Content-Type', 'application/json');
         res.status(201).json({ message: 'User created successfully', id: result.insertedId });
     } catch (error) {
-        res.status(500).json({ message: 'Error creating user' });
+        res.status(500).json({ message: 'Error creating user', error: error.json });
     }
 };
 

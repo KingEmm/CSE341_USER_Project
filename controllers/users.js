@@ -36,6 +36,7 @@ const usernameExists = async (username) => {
   }
   try {
     const result = await mongodb.getDb().db('test').collection('Users').findOne({ 'username': username });
+    console.log({result: result});
     return result !== null;
   } catch (error) {
     return false;
@@ -111,23 +112,28 @@ const createUser = async (req, res, next) => {
 const editSingleUser = async (req, res, next) => {
   // console.log(req.params.id);
     const username = req.params.username;
+    // console.log(username);
     const data  =  req.body;
     // const errors = validator.validationResult(req.body);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }
-    try{
-        if(!await usernameExists(username)){
+    try{ 
+        const userExist = !await usernameExists(username);
+        console.log(userExist);
+        if(!userExist){
             res.status(404).json({ message: 'User not found' });
             return;
         }
-        if(emailExists(data.email)){
-            res.status(400).json({message: "Email Aready Exists"})
-            return;
-        }
+        // let a = await mongodb.getDb().db('test').collection('Users').findOne({ 'username': username });
+        // console.log(a.email);
+        // if(emailExists(data.email) == ( a.email != data.email)){
+        //     res.status(400).json({message: "Email Aready Exists"})
+        //     return;
+        // }
         const result = await mongodb.getDb().db('test').collection('Users').updateOne({ 'username': username }, { $set: data });
-    
+        console.log(result);
         if (result) {
             res.setHeader('Content-Type', 'application/json');
             res.status(201).json({ message: 'User updated successfully' });
@@ -145,7 +151,8 @@ const deleteUser = async (req, res, next) => {
     const username = req.params.username;
 
     try{
-        if(!await usernameExists(username)){
+        const userExists = await usernameExists(username);
+        if(!userExists){
             res.status(404).json({ message: 'User not found' });
             return;
         }

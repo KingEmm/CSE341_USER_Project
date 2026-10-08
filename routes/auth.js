@@ -15,25 +15,28 @@ function isAuthenticated(req, res, next) {
 
 
 // Authentication: verifies the Bearer token and attaches req.user
-protect = async (req, res, next) => {
-    const User = await mongodb.getDb().db('test').collection('Users');
+const protect = async (req, res, next) => {
+    // const User = await ;
   try {
     const header = req.headers.authorization || '';
     if (!header.startsWith('Bearer ')) {
       return res.status(401).json({ message: 'Not authorized, token missing' });
     }
     const decoded = jwt.verify(header.split(' ')[1], process.env.JWT_SECRET);
-    const user = await User.findById(decoded.id);
+    console.log(decoded);
+    const user = await mongodb.getDb().db('test').collection('Users').findOne({'googleId' : decoded.id});
+    console.log(user);
     if (!user) return res.status(401).json({ message: 'User no longer exists' });
     req.user = user;
     next();
   } catch (err) {
+    console.log(err);
     return res.status(401).json({ message: 'Not authorized, invalid or expired token' });
   }
 };
 
 // Authorization: role-based access
-authorize = (...roles) => (req, res, next) => {
+const authorize = (...roles) => (req, res, next) => {
   if (!roles.includes(req.user.role)) {
     return res.status(403).json({ message: 'Forbidden: insufficient permissions' });
   }
@@ -75,4 +78,4 @@ router.get(
   }
 );
 
-module.exports = {router, isAuthenticated};
+module.exports = {router, isAuthenticated, protect};

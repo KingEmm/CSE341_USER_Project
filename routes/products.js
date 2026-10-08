@@ -2,6 +2,7 @@ const express = require('express');
 
 const professionalController = require('../controllers/products');
 
+const auth = require("./auth")
 const productRouter = express.Router();
 
 /**
@@ -76,7 +77,7 @@ productRouter.get('/:id', professionalController.getSingleProduct);
  *       400:
  *         description: Invalid Products data
  */
-productRouter.post('/', professionalController.productValidation, professionalController.createProduct);
+productRouter.post('/', auth.protect, professionalController.productValidation, professionalController.createProduct);
 
 /**
  * @swagger
@@ -126,7 +127,7 @@ productRouter.post('/', professionalController.productValidation, professionalCo
  *       400:
  *         description: Invalid Products data
  */
-productRouter.put('/:id', professionalController.productValidation, professionalController.editSingleProduct);
+productRouter.put('/:id', auth.protect, professionalController.productValidation, professionalController.editSingleProduct);
 
 /** 
  * @swagger
@@ -146,6 +147,6 @@ productRouter.put('/:id', professionalController.productValidation, professional
  *       200:
  *         description: Success
  */
-productRouter.delete('/:id', professionalController.deleteSingleProduct);
+productRouter.delete('/:id', auth.protect, professionalController.deleteSingleProduct);
 
 module.exports = productRouter;

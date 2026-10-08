@@ -19,10 +19,9 @@ const options = {
         OAuth2: {
           type: "oauth2",
           flows: {
-            authorizationCode: {
-              authorizationUrl: "/auth/login",
-              tokenUrl: "/auth/token",
-              scopes: {}
+            authorization: {
+              authorizationUrl: "/auth/google",
+              tokenUrl: "/auth/token"
             }
           }
         },

@@ -37,7 +37,9 @@ productRouter.get('/:id', professionalController.getSingleProduct);
  * @swagger
  * /products:
  *   post:
- *     summary: Create a new product
+ *     summary: Create a new 
+ *     security:
+ *        - bearerAuth: []
  *     tags:
  *       - Products
  *     requestBody:
@@ -81,6 +83,8 @@ productRouter.post('/', professionalController.productValidation, professionalCo
  * /products/{id}:
  *   put:
  *     summary: Update a product
+ *     security:
+ *        - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -129,6 +133,8 @@ productRouter.put('/:id', professionalController.productValidation, professional
  * /products/{id}:
  *   delete:
  *     summary: Delete a product
+ *     security:
+ *        - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: id

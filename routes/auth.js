@@ -63,6 +63,7 @@ router.get(
   "/google/callback",
   passport.authenticate("google", {
     session: false,
+    failureRedirect: "/api-docs",
   }),
   (req, res) => {
     const token = jwt.sign(

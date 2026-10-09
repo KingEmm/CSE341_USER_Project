@@ -9,9 +9,9 @@ const swaggerSpec = require('./swagger');
 const session = require("express-session");
 const passport = require('passport');
 
+require("dotenv").config();
 require("./config/passport");
 
-require("dotenv").config();
 const port = process.env.PORT || 8080;
 
 

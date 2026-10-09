@@ -29,7 +29,8 @@ const isValidUID = async (productId) => {
 const getAllProducts = async (req, res, next) => {
     try{
         const result = await mongodb.getDb().db('test').collection('Products').find();
-        
+        console.log(process.env.GOOGLE_REDIRECT_URI);
+
         result.toArray().then((lists) => {
             res.setHeader('Content-Type', 'application/json');
             res.status(200).json(lists); // we just need the first one (the only one).

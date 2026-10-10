@@ -10,7 +10,7 @@ const options = {
     },
     servers: [
       {
-        url: "https://cse341-user-project.onrender.com/auth/google/callback",
+        url: "https://cse341-user-project.onrender.com/",
       },
     ],
 

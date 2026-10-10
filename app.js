@@ -39,11 +39,11 @@ app
 .use('/products', products)
 .use('/auth', require("./routes/auth").router)
 .use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
-.use((req, res) => {
-    const err = new Error('Page Not Found');
-    // err.status = 404;
-    res.status(404).json({Message: err.message});
-});
+// .use((req, res) => {
+//     const err = new Error('Page Not Found');
+//     // err.status = 404;
+//     res.status(404).json({Message: err.message});
+// });
 
 
 mongodb.initDb((err, mongodb) => {
